@@ -64,7 +64,7 @@ const [copied, setCopied] = useState(false);
     setLoading(true);
 
     const response = await axios.post(
-      "http://localhost:5000/review",
+      "https://lyadh-code-backend.onrender.com/review",
       { code }
     );
 
