@@ -160,7 +160,7 @@ Never commit your API keys to GitHub.
 **Munshi Jarjis Alam**
 
 Third-Year B.Tech Student
-Computer Science & Technology Department
+Computer Science & Technology at
 Institute of Engineering & Management (IEM), Kolkata
 
 Passionate about software development, artificial intelligence, UI/UX design, and building innovative technology solutions that solve real-world problems.
