@@ -1,15 +1,30 @@
 import { motion } from "framer-motion";
 
-export default function ParticlesBg() {
-  // Generate random polka dots
-  const polkaDots = Array.from({ length: 20 }, (_, i) => ({
-    id: i,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    size: Math.random() * 4 + 2,
-    duration: Math.random() * 15 + 20,
-    delay: Math.random() * 5,
-  }));
+const STATIC_PARTICLES = Array.from({ length: 25 }, (_, i) => ({
+  id: i,
+  x: Math.random() * 100,
+  y: Math.random() * 100,
+  size: Math.random() * 3 + 1.5,
+  duration: Math.random() * 20 + 25,
+  delay: Math.random() * -20,
+  opacity: Math.random() * 0.5 + 0.2,
+}));
+
+export default function ParticlesBg({ stealth }) {
+
+  if (stealth) {
+    return (
+      <div
+        style={{
+          position: "fixed",
+          inset: 0,
+          zIndex: -1,
+          overflow: "hidden",
+          background: "#000000",
+        }}
+      />
+    );
+  }
 
   return (
     <div
@@ -18,7 +33,7 @@ export default function ParticlesBg() {
         inset: 0,
         zIndex: -1,
         overflow: "hidden",
-        background: "#000000",
+        background: "radial-gradient(circle at 50% 50%, #0a0a0a 0%, #050505 100%)",
         fontFamily: "'Cascadia Code', monospace",
       }}
     >
@@ -28,83 +43,38 @@ export default function ParticlesBg() {
           position: "absolute",
           inset: 0,
           backgroundImage: `
-            linear-gradient(0deg, transparent 24%, rgba(34, 197, 94, 0.05) 25%, rgba(34, 197, 94, 0.05) 26%, transparent 27%, transparent 74%, rgba(34, 197, 94, 0.05) 75%, rgba(34, 197, 94, 0.05) 76%, transparent 77%, transparent),
-            linear-gradient(90deg, transparent 24%, rgba(34, 197, 94, 0.05) 25%, rgba(34, 197, 94, 0.05) 26%, transparent 27%, transparent 74%, rgba(34, 197, 94, 0.05) 75%, rgba(34, 197, 94, 0.05) 76%, transparent 77%, transparent)
+            linear-gradient(0deg, transparent 24%, rgba(34, 197, 94, 0.03) 25%, rgba(34, 197, 94, 0.03) 26%, transparent 27%, transparent 74%, rgba(34, 197, 94, 0.03) 75%, rgba(34, 197, 94, 0.03) 76%, transparent 77%, transparent),
+            linear-gradient(90deg, transparent 24%, rgba(34, 197, 94, 0.03) 25%, rgba(34, 197, 94, 0.03) 26%, transparent 27%, transparent 74%, rgba(34, 197, 94, 0.03) 75%, rgba(34, 197, 94, 0.03) 76%, transparent 77%, transparent)
           `,
-          backgroundSize: "50px 50px",
-          opacity: 0.3,
+          backgroundSize: "60px 60px",
+          opacity: 0.8,
         }}
       />
 
-      {/* Terminal scanlines effect */}
+      {/* Subtle Scanlines */}
       <div
         style={{
           position: "absolute",
           inset: 0,
-          backgroundImage: `repeating-linear-gradient(
-            0deg,
-            rgba(0, 0, 0, 0.15),
-            rgba(0, 0, 0, 0.15) 1px,
-            transparent 1px,
-            transparent 2px
+          backgroundImage: `linear-gradient(
+            rgba(18, 18, 18, 0) 50%, 
+            rgba(0, 0, 0, 0.25) 50%
           )`,
+          backgroundSize: "100% 4px",
           pointerEvents: "none",
-          animation: "scan 8s linear infinite",
+          opacity: 0.4,
         }}
       />
 
-      {/* Ambient glow */}
+      {/* Radial Green Glows */}
       <motion.div
         animate={{
-          x: [0, 100, -50, 0],
-          y: [0, -100, 50, 0],
+          x: [0, 80, -40, 0],
+          y: [0, -80, 40, 0],
+          scale: [1, 1.1, 0.95, 1],
         }}
         transition={{
-          duration: 10,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-        style={{
-          position: "absolute",
-          width: "700px",
-          height: "700px",
-          borderRadius: "50%",
-          background: "rgba(34,197,94,0.08)",
-          filter: "blur(150px)",
-          top: "-200px",
-          left: "-200px",
-        }}
-      />
-
-      <motion.div
-        animate={{
-          x: [0, -80, 60, 0],
-          y: [0, 120, -40, 0],
-        }}
-        transition={{
-          duration: 13,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
-        style={{
-          position: "absolute",
-          width: "800px",
-          height: "800px",
-          borderRadius: "50%",
-          background: "rgba(22,163,74,0.12)",
-          filter: "blur(150px)",
-          bottom: "-300px",
-          right: "-300px",
-        }}
-      />
-
-      <motion.div
-        animate={{
-          x: [0, 50, -100, 0],
-          y: [0, 80, -60, 0],
-        }}
-        transition={{
-          duration: 16,
+          duration: 25,
           repeat: Infinity,
           ease: "easeInOut",
         }}
@@ -113,51 +83,146 @@ export default function ParticlesBg() {
           width: "600px",
           height: "600px",
           borderRadius: "50%",
-          background: "rgba(34,197,94,0.05)",
-          filter: "blur(120px)",
-          top: "50%",
-          right: "-100px",
-          transform: "translateY(-50%)",
+          background: "radial-gradient(circle, rgba(34,197,94,0.04) 0%, rgba(34,197,94,0) 70%)",
+          filter: "blur(80px)",
+          top: "-150px",
+          left: "10%",
+          pointerEvents: "none",
         }}
       />
 
-      {/* Polka Dots */}
-      {polkaDots.map((dot) => (
+      <motion.div
+        animate={{
+          x: [0, -60, 50, 0],
+          y: [0, 100, -50, 0],
+          scale: [1, 0.9, 1.05, 1],
+        }}
+        transition={{
+          duration: 30,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+        style={{
+          position: "absolute",
+          width: "700px",
+          height: "700px",
+          borderRadius: "50%",
+          background: "radial-gradient(circle, rgba(22,163,74,0.05) 0%, rgba(22,163,74,0) 70%)",
+          filter: "blur(100px)",
+          bottom: "-200px",
+          right: "5%",
+          pointerEvents: "none",
+        }}
+      />
+
+      {/* Floating Circuit Traces (Background Decor) */}
+      <svg
+        style={{
+          position: "absolute",
+          top: "10%",
+          left: "5%",
+          opacity: 0.1,
+          width: "300px",
+          height: "300px",
+          pointerEvents: "none",
+        }}
+        viewBox="0 0 100 100"
+        fill="none"
+        stroke="#22c55e"
+        strokeWidth="0.5"
+      >
+        <path
+          className="circuit-trace"
+          d="M 10 10 L 40 10 L 50 20 L 50 50 L 70 70 L 90 70"
+          strokeDasharray="200"
+          strokeDashoffset="200"
+        />
+        <circle cx="10" cy="10" r="1.5" fill="#22c55e" />
+        <circle cx="90" cy="70" r="1.5" fill="#22c55e" />
+      </svg>
+
+      <svg
+        style={{
+          position: "absolute",
+          bottom: "15%",
+          right: "5%",
+          opacity: 0.1,
+          width: "350px",
+          height: "350px",
+          pointerEvents: "none",
+        }}
+        viewBox="0 0 100 100"
+        fill="none"
+        stroke="#22c55e"
+        strokeWidth="0.5"
+      >
+        <path
+          className="circuit-trace"
+          d="M 90 90 L 60 90 L 50 80 L 50 40 L 30 20 L 10 20"
+          strokeDasharray="200"
+          strokeDashoffset="200"
+        />
+        <circle cx="90" cy="90" r="1.5" fill="#22c55e" />
+        <circle cx="10" cy="20" r="1.5" fill="#22c55e" />
+      </svg>
+
+      {/* Floating Particles */}
+      {STATIC_PARTICLES.map((p) => (
         <motion.div
-          key={dot.id}
+          key={p.id}
           initial={{
-            x: `${dot.x}vw`,
-            y: `${dot.y}vh`,
+            x: `${p.x}vw`,
+            y: `${p.y}vh`,
+            opacity: p.opacity,
           }}
           animate={{
-            x: [`${dot.x}vw`, `${(dot.x + 30) % 100}vw`, `${(dot.x - 20) % 100}vw`, `${dot.x}vw`],
-            y: [`${dot.y}vh`, `${(dot.y + 40) % 100}vh`, `${(dot.y - 30) % 100}vh`, `${dot.y}vh`],
+            y: ["0vh", "100vh"],
+            x: [
+              `${p.x}vw`,
+              `${(p.x + 5) % 100}vw`,
+              `${(p.x - 5 + 100) % 100}vw`,
+              `${p.x}vw`,
+            ],
           }}
           transition={{
-            duration: dot.duration,
-            repeat: Infinity,
-            ease: "easeInOut",
-            delay: dot.delay,
+            y: {
+              duration: p.duration,
+              repeat: Infinity,
+              ease: "linear",
+              delay: p.delay,
+            },
+            x: {
+              duration: p.duration / 2,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: p.delay,
+            },
           }}
           style={{
             position: "fixed",
-            width: `${dot.size}px`,
-            height: `${dot.size}px`,
+            width: `${p.size}px`,
+            height: `${p.size}px`,
             borderRadius: "50%",
-            background: "rgba(34,197,94,0.6)",
-            boxShadow: "0 0 10px rgba(34,197,94,0.8)",
+            background: "#22c55e",
+            boxShadow: "0 0 8px rgba(34, 197, 94, 0.8)",
             pointerEvents: "none",
           }}
         />
       ))}
 
       <style>{`
-        @keyframes scan {
+        .circuit-trace {
+          animation: drawTrace 12s linear infinite;
+        }
+        @keyframes drawTrace {
           0% {
-            transform: translateY(0);
+            stroke-dashoffset: 200;
+          }
+          50% {
+            stroke-dashoffset: 0;
           }
           100% {
-            transform: translateY(10px);
+            stroke-dashoffset: -200;
           }
         }
       `}</style>
