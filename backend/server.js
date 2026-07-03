@@ -58,6 +58,20 @@ const groq = new Groq({
   apiKey: isApiKeyConfigured ? apiKey : "missing_api_key_placeholder",
 });
 
+app.get("/", (req, res) => {
+  res.json({
+    status: "active",
+    message: "LYADH CODE AI Review Server is running. Send a POST request to /review to review code.",
+  });
+});
+
+app.get("/review", (req, res) => {
+  res.status(405).json({
+    error: "Method Not Allowed",
+    message: "The /review endpoint only accepts POST requests containing a JSON body with a 'code' field.",
+  });
+});
+
 app.post("/review", async (req, res) => {
   if (!isApiKeyConfigured) {
     return res.status(400).json({
