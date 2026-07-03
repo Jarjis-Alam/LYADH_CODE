@@ -8,7 +8,6 @@ dotenv.config();
 
 const app = express();
 
-// Secure CORS - Allow only your Vercel frontend and local development
 const allowedOrigins = [
   "https://lyadh-code.vercel.app",
   "http://localhost:5173",
@@ -18,10 +17,15 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
+      if (!origin) {
+        callback(null, true);
+        return;
+      }
+      const isLocalhost = /^https?:\/\/localhost(:\d+)?$/.test(origin) || /^https?:\/\/127\.0\.0\.1(:\d+)?$/.test(origin);
+      if (allowedOrigins.includes(origin) || isLocalhost) {
         callback(null, true);
       } else {
-        callback(new Error("Not allowed by CORS"));
+        callback(new Error(`Not allowed by CORS: ${origin}`));
       }
     },
   })
@@ -42,11 +46,25 @@ const limiter = rateLimit({
 
 app.use("/review", limiter);
 
+const apiKey = process.env.GROQ_API_KEY;
+const isApiKeyConfigured = apiKey && apiKey !== "your_groq_api_key_here" && apiKey.trim() !== "";
+
+if (!isApiKeyConfigured) {
+  console.warn("\n⚠️  [WARNING] GROQ_API_KEY is not configured or is set to the default placeholder!");
+  console.warn("Please get an API key from https://console.groq.com/ and set it in backend/.env to run reviews.\n");
+}
+
 const groq = new Groq({
-  apiKey: process.env.GROQ_API_KEY,
+  apiKey: isApiKeyConfigured ? apiKey : "missing_api_key_placeholder",
 });
 
 app.post("/review", async (req, res) => {
+  if (!isApiKeyConfigured) {
+    return res.status(400).json({
+      error: "GROQ_API_KEY is not configured. Please set your GROQ_API_KEY in backend/.env to use the AI Code Reviewer.",
+    });
+  }
+
   try {
     const { code } = req.body;
 
@@ -88,6 +106,6 @@ ${code}
   }
 });
 
-app.listen(5000, () => {
-  console.log("Server running on port 5000");
+app.listen(5000, "127.0.0.1", () => {
+  console.log("Server running on http://127.0.0.1:5000");
 });
